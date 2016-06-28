@@ -36,7 +36,7 @@ describe JavaBuildpack::Framework::TakipiAgent do
 
     it 'updates JAVA_OPTS' do
       component.release
-      expect(java_opts).to include('-agentpath:$PWD/.java-buildpack/takipi_agent/lib/libTakipiAgent.so')
+      expect(java_opts).to include('-agentlib:TakipiAgent')
       expect(java_opts).to include('-Dtakipi.name=test-application-name')
     end
 
@@ -49,7 +49,7 @@ describe JavaBuildpack::Framework::TakipiAgent do
 
       it 'updates JAVA_OPTS' do
         component.release
-        expect(java_opts).to include('-agentpath:$PWD/.java-buildpack/takipi_agent/lib/libTakipiAgent.so')
+        expect(java_opts).to include('-agentlib:TakipiAgent')
         expect(java_opts).to include('-Dtakipi.name=test-name')
       end
 

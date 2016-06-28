@@ -84,7 +84,7 @@ module JavaBuildpack
         agents_log_dir = log_dir + "agents"
         if agents_log_dir.exist? && agents_log_dir.directory?
           agents_log_dir.rmtree
-        elsif agents_log_dir.exists? && !agents_log_dir.symlink?
+        elsif agents_log_dir.exist? && !agents_log_dir.symlink?
           agents_log_dir.unlink
         end
         agents_log_dir.make_symlink("/home/vcap/logs")

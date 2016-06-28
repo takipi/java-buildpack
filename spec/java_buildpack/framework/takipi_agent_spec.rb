@@ -54,10 +54,9 @@ describe JavaBuildpack::Framework::TakipiAgent do
       component.release
 
       expect(environment_variables).to include("TAKIPI_SECRET_KEY='test-secret'")
-      expect(environment_variables).to include("LD_LIBRARY_PATH=$PWD/.java-buildpack/takipi_agent/lib")
+      expect(environment_variables).to include("LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PWD/.java-buildpack/takipi_agent/lib")
       expect(environment_variables).to include("JVM_LIB_FILE=$PWD/.test-java-home/lib/amd64/server/libjvm.so")
       expect(environment_variables).to include("TAKIPI_HOME=$PWD/.java-buildpack/takipi_agent")
-      expect(environment_variables).to include("PATH=$PATH:$PWD/.java-buildpack/takipi_agent/bin")
     end
 
     context 'configuration overrides' do

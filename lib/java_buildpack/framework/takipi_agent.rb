@@ -44,7 +44,7 @@ module JavaBuildpack
       end
 
       def detect
-        true
+        @configuration['secret_key'] != 'REPLACE_ME'
       end
 
       private
@@ -56,11 +56,9 @@ module JavaBuildpack
         env = @droplet.environment_variables
         sandbox = @droplet.sandbox
         # find a way to avoid LD_LIBRARY_PATH
-        env.add_environment_variable('LD_LIBRARY_PATH', sandbox + 'lib')
+        env.add_environment_variable('LD_LIBRARY_PATH', "$LD_LIBRARY_PATH:#{qualify_path(sandbox + 'lib', @droplet.root)}")
         env.add_environment_variable('JVM_LIB_FILE', jvm_lib_file)
         env.add_environment_variable('TAKIPI_HOME', sandbox)
-        # we really shouldn't touch the path
-        env.add_environment_variable('PATH', '$PATH:' + qualify_path(sandbox + 'bin', @droplet.root))
         env.add_environment_variable('TAKIPI_SECRET_KEY', "'#{@configuration['secret_key']}'")
         env.add_environment_variable('TAKIPI_MACHINE_NAME', node_name)
       end

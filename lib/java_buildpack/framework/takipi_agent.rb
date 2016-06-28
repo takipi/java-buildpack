@@ -44,7 +44,7 @@ module JavaBuildpack
       end
 
       def detect
-        @configuration['secret_key'] != 'REPLACE_ME'
+        @configuration['secret_key'] != 'REPLACE_ME' ? "takipi-agent=#{@configuration['version']}" : nil
       end
 
       private

@@ -17,7 +17,7 @@
 ---
 version: 2.0.256
 repository_root: "{default.repository.root}/takipi"
-uri: 'http://sam.sparktale.s3.amazonaws.com/samv2/snapshots/native/v2.0.256/takipi-heroku-v2.0.256.tar.gz'
+uri: 'https://app.takipi.com/app/download?t=t4c-tgz'
 secret_key: REPLACE_ME
 # application_name:
 node_name_prefix:

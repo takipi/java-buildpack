@@ -23,7 +23,10 @@ describe JavaBuildpack::Framework::TakipiAgent do
 
   context do
     let(:configuration) do
-      { 'uri' => 'test-uri' }
+      {
+        'uri' => 'test-uri',
+        'secret_key' => 'test-secret'
+      }
     end
 
     it 'expands Takipi agent tarball',
@@ -34,10 +37,27 @@ describe JavaBuildpack::Framework::TakipiAgent do
       expect(sandbox + 'lib/libTakipiAgent.so').to exist
     end
 
+    it 'symlinks the log directory',
+     cache_fixture: 'stub-takipi-agent.tar.gz' do
+
+      component.compile
+      expect(sandbox + 'log').to be_symlink
+    end
+
     it 'updates JAVA_OPTS' do
       component.release
       expect(java_opts).to include('-agentlib:TakipiAgent')
       expect(java_opts).to include('-Dtakipi.name=test-application-name')
+    end
+
+    it 'updates environment varilables' do
+      component.release
+
+      expect(environment_variables).to include("TAKIPI_SECRET_KEY='test-secret'")
+      expect(environment_variables).to include("LD_LIBRARY_PATH=$PWD/.java-buildpack/takipi_agent/lib")
+      expect(environment_variables).to include("JVM_LIB_FILE=$PWD/.test-java-home/lib/amd64/server/libjvm.so")
+      expect(environment_variables).to include("TAKIPI_HOME=$PWD/.java-buildpack/takipi_agent")
+      expect(environment_variables).to include("PATH=$PATH:$PWD/.java-buildpack/takipi_agent/bin")
     end
 
     context 'configuration overrides' do

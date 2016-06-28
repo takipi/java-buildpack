@@ -80,14 +80,15 @@ module JavaBuildpack
 
       def prepare_agent_log_dir
         log_dir = @droplet.sandbox + "log"
-        log_dir.mkdir unless log_dir.directory?
-        agents_log_dir = log_dir + "agents"
-        if agents_log_dir.exist? && agents_log_dir.directory?
-          agents_log_dir.rmtree
-        elsif agents_log_dir.exist? && !agents_log_dir.symlink?
-          agents_log_dir.unlink
+        if log_dir.directory?
+          log_dir.rmtree
+        elsif log_dir.exist? && !log_dir.symlink?
+          log_dir.unlink
         end
-        agents_log_dir.make_symlink("/home/vcap/logs")
+        log_dir.make_symlink("/home/vcap/logs")
+
+        agents_log_dir = @droplet.root + "home/vcap/logs"
+        agents_log_dir.mkpath() unless agents_log_dir.directory?
       end
     end
 

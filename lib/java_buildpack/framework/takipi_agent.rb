@@ -19,6 +19,7 @@ require 'java_buildpack/component/versioned_dependency_component'
 require 'java_buildpack/framework'
 require 'java_buildpack/util/qualify_path'
 
+
 module JavaBuildpack
   module Framework
 
@@ -32,7 +33,6 @@ module JavaBuildpack
         version = @configuration['version']
         download_tar(version, uri, @droplet.sandbox, 'Takipi Agent')
         @droplet.copy_resources
-        prepare_agent_log_dir
       end
 
       # (see JavaBuildpack::Component::BaseComponent#release)
@@ -74,19 +74,6 @@ module JavaBuildpack
         else
           %q|$(ruby -rjson -e "puts JSON.parse(ENV['VCAP_APPLICATION'])['instance_id']")|
         end
-      end
-
-      def prepare_agent_log_dir
-        log_dir = @droplet.sandbox + "log"
-        if log_dir.directory?
-          log_dir.rmtree
-        elsif log_dir.exist? && !log_dir.symlink?
-          log_dir.unlink
-        end
-        log_dir.make_symlink("/home/vcap/logs")
-
-        agents_log_dir = @droplet.root + "home/vcap/logs"
-        agents_log_dir.mkpath() unless agents_log_dir.directory?
       end
     end
 

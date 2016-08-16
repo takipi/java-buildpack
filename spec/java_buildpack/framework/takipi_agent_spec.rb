@@ -17,6 +17,7 @@
 require 'spec_helper'
 require 'component_helper'
 require 'java_buildpack/framework/takipi_agent'
+require 'java_buildpack/util/find_single_directory'
 
 describe JavaBuildpack::Framework::TakipiAgent do
   include_context 'component_helper'
@@ -37,11 +38,12 @@ describe JavaBuildpack::Framework::TakipiAgent do
       expect(sandbox + 'lib/libTakipiAgent.so').to exist
     end
 
-    it 'symlinks the log directory',
-     cache_fixture: 'stub-takipi-agent.tar.gz' do
-
+    it 'preserves find_single_directory results',
+        cache_fixture: 'stub-takipi-agent.tar.gz',
+        app_fixture: 'container_play_2.1_dist' do
       component.compile
-      expect(sandbox + 'log').to be_symlink
+      component.send(:extend, JavaBuildpack::Util)
+      expect(component.send(:find_single_directory)).to_not be_nil
     end
 
     it 'updates JAVA_OPTS' do

@@ -1,6 +1,5 @@
-# Encoding: utf-8
 # Cloud Foundry Java Buildpack
-# Copyright 2013-2016 the original author or authors.
+# Copyright 2013-2017 the original author or authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -22,7 +21,9 @@ require 'java_buildpack/util/tokenized_version'
 describe JavaBuildpack::Repository::VersionResolver do
   include_context 'logging_helper'
 
-  let(:versions) { %w(1.6.0_26 1.6.0_27 1.6.1_14 1.7.0_19 1.7.0_21 1.8.0_M-7 1.8.0_05 2.0.0 2.0.0a) }
+  let(:versions) do
+    %w[1.6.0_26 1.6.0_27 1.6.0_112 1.6.0_102 1.6.0_45RELEASE 1.6.1_14 1.7.0_19 1.7.0_21 1.8.0_M-7 1.8.0_05 2.0.0 2.0.0a]
+  end
 
   it 'resolves the default version if no candidate is supplied' do
     expect(described_class.resolve(nil, versions)).to eq(tokenized_version('2.0.0'))
@@ -41,8 +42,12 @@ describe JavaBuildpack::Repository::VersionResolver do
   end
 
   it 'resolves a wildcard qualifier' do
-    expect(described_class.resolve(tokenized_version('1.6.0_+'), versions)).to eq(tokenized_version('1.6.0_27'))
+    expect(described_class.resolve(tokenized_version('1.6.0_+'), versions)).to eq(tokenized_version('1.6.0_112'))
     expect(described_class.resolve(tokenized_version('1.8.0_+'), versions)).to eq(tokenized_version('1.8.0_05'))
+  end
+
+  it 'resolves a partial-wildcard qualifier' do
+    expect(described_class.resolve(tokenized_version('1.7.0_1+'), versions)).to eq(tokenized_version('1.7.0_19'))
   end
 
   it 'resolves a non-wildcard version' do

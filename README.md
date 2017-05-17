@@ -26,33 +26,33 @@ The buildpack supports extension through the use of Git repository forking. The 
 Buildpack configuration can be overridden with an environment variable matching the configuration file you wish to override minus the `.yml` extension and with a prefix of `JBP_CONFIG`. It is not possible to add new configuration properties and properties with `nil` or empty values will be ignored by the buildpack. The value of the variable should be valid inline yaml, referred to as `flow style` in the yaml spec ([Wikipedia] has a good description of this yaml syntax). For example, to change the default version of Java to 7 and adjust the memory heuristics apply this environment variable to the application.
 
 ```bash
-$ cf set-env my-application JBP_CONFIG_OPEN_JDK_JRE '{jre: { version: 1.7.0_+ }}'
+$ cf set-env my-application JBP_CONFIG_OPEN_JDK_JRE '{ jre: { version: 1.8.0_+ }, memory_calculator: { stack_threads: 200 } }'
 ```
 
 If the key or value contains a special character such as `:` it should be escaped with double quotes. For example, to change the default repository path for the buildpack.
 
 ```bash
-$ cf set-env my-application JBP_CONFIG_REPOSITORY '{default_repository_root: "http://repo.example.io"}'
+$ cf set-env my-application JBP_CONFIG_REPOSITORY '{ default_repository_root: "http://repo.example.io" }'
 ```
 
 If the key or value contains an environment variable that you want to bind at runtime you need to escape it from your shell. For example, to add command line arguments containing an environment variable to a [Java Main](docs/container-java_main.md) application.
 
 ```bash
-$ cf set-env my-application JBP_CONFIG_JAVA_MAIN '{arguments: "-server.port=\$PORT -foo=bar"}'
+$ cf set-env my-application JBP_CONFIG_JAVA_MAIN '{ arguments: "-server.port=\$PORT -foo=bar" }'
 ```
 
 Environment variable can also be specified in the applications `manifest` file. For example, to specify an environment variable in an applications manifest file that disables Auto-reconfiguration.
 
 ```bash
   env:
-    JBP_CONFIG_SPRING_AUTO_RECONFIGURATION: '{enabled: false}'
+    JBP_CONFIG_SPRING_AUTO_RECONFIGURATION: '{ enabled: false }'
 ```
 
 This final example shows how to change the version of Tomcat that is used by the buildpack with an environment variable specified in the applications manifest file.
 
 ```bash
   env:
-    JBP_CONFIG_TOMCAT: '{tomcat: { version: 8.0.+ }}'
+    JBP_CONFIG_TOMCAT: '{ tomcat: { version: 8.0.+ } }'
 ```
 
 See the [Environment Variables][] documentation for more information.
@@ -76,8 +76,10 @@ To learn how to configure various properties of the buildpack, follow the "Confi
 	* [Container Certificate Trust Store](docs/framework-container_certificate_trust_store.md) ([Configuration](docs/framework-container_certificate_trust_store.md#configuration))
 	* [Container Customizer](docs/framework-container_customizer.md) ([Configuration](docs/framework-container_customizer.md#configuration))
 	* [Debug](docs/framework-debug.md) ([Configuration](docs/framework-debug.md#configuration))
-	* [Dynatrace Application Monitoring Agent](docs/framework-dyna_trace_agent.md) ([Configuration](docs/framework-dyna_trace_agent.md#configuration))
-	* [Dynatrace Ruxit Cloud Native Agent](docs/framework-ruxit_agent.md) ([Configuration](docs/framework-ruxit_agent.md#configuration))
+	* [Dyadic EKM Security Provider](docs/framework-dyadic_ekm_security_provider.md) ([Configuration](docs/framework-dyadic_ekm_security_provider.md#configuration))
+	* [Dynatrace Appmon Agent](docs/framework-dynatrace_appmon_agent.md) ([Configuration](docs/framework-dynatrace_appmon_agent.md#configuration))
+	* [Dynatrace SaaS/Managed OneAgent](docs/framework-dynatrace_one_agent.md) ([Configuration](docs/framework-dynatrace_one_agent.md#configuration))
+	* [Google Stackdriver Debugger](docs/framework-google_stackdriver_debugger.md) ([Configuration](docs/framework-google_stackdriver_debugger.md#configuration))
 	* [Introscope Agent](docs/framework-introscope_agent.md) ([Configuration](docs/framework-introscope_agent.md#configuration))
 	* [Java Options](docs/framework-java_opts.md) ([Configuration](docs/framework-java_opts.md#configuration))
 	* [JRebel Agent](docs/framework-jrebel_agent.md) ([Configuration](docs/framework-jrebel_agent.md#configuration))
@@ -88,6 +90,7 @@ To learn how to configure various properties of the buildpack, follow the "Confi
 	* [Play Framework Auto Reconfiguration](docs/framework-play_framework_auto_reconfiguration.md) ([Configuration](docs/framework-play_framework_auto_reconfiguration.md#configuration))
 	* [Play Framework JPA Plugin](docs/framework-play_framework_jpa_plugin.md) ([Configuration](docs/framework-play_framework_jpa_plugin.md#configuration))
 	* [PostgreSQL JDBC](docs/framework-postgresql_jdbc.md) ([Configuration](docs/framework-postgresql_jdbc.md#configuration))
+	* [ProtectApp Security Provider](docs/framework-protect_app_security_provider.md) ([Configuration](docs/framework-protect_app_security_provider.md#configuration))
 	* [Spring Auto Reconfiguration](docs/framework-spring_auto_reconfiguration.md) ([Configuration](docs/framework-spring_auto_reconfiguration.md#configuration))
 	* [Spring Insight](docs/framework-spring_insight.md)
 	* [YourKit Profiler](docs/framework-your_kit_profiler.md) ([Configuration](docs/framework-your_kit_profiler.md#configuration))
@@ -109,18 +112,22 @@ To learn how to configure various properties of the buildpack, follow the "Confi
 * [Buildpack Modes](docs/buildpack-modes.md)
 * Related Projects
 	* [Java Buildpack Dependency Builder](https://github.com/cloudfoundry/java-buildpack-dependency-builder)
+	* [Java Buildpack Memory Calculator](https://github.com/cloudfoundry/java-buildpack-memory-calculator)
 	* [Java Test Applications](https://github.com/cloudfoundry/java-test-applications)
 	* [Java Buildpack System Tests](https://github.com/cloudfoundry/java-buildpack-system-test)
+	* [jvmkill](https://github.com/cloudfoundry/jvmkill)
 
 ## Building Packages
 The buildpack can be packaged up so that it can be uploaded to Cloud Foundry using the `cf create-buildpack` and `cf update-buildpack` commands.  In order to create these packages, the rake `package` task is used.
+
+Note that this process is not currently supported on Windows. It is possible it will work, but it is not tested, and no additional functionality has been added to make it work.
 
 ### Online Package
 The online package is a version of the buildpack that is as minimal as possible and is configured to connect to the network for all dependencies.  This package is about 50K in size.  To create the online package, run:
 
 ```bash
 $ bundle install
-$ bundle exec rake package
+$ bundle exec rake clean package
 ...
 Creating build/java-buildpack-cfd6b17.zip
 ```
@@ -132,7 +139,7 @@ To pin the version of dependencies used by the buildpack to the ones currently r
 
 ```bash
 $ bundle install
-$ bundle exec rake package OFFLINE=true PINNED=true
+$ bundle exec rake clean package OFFLINE=true PINNED=true
 ...
 Creating build/java-buildpack-offline-cfd6b17.zip
 ```
@@ -142,7 +149,7 @@ Keeping track of different versions of the buildpack can be difficult.  To help 
 
 ```bash
 $ bundle install
-$ bundle exec rake package VERSION=2.1
+$ bundle exec rake clean package VERSION=2.1
 ...
 Creating build/java-buildpack-2.1.zip
 ```
@@ -165,7 +172,7 @@ This buildpack is released under version 2.0 of the [Apache License][].
 
 [`config/` directory]: config
 [Apache License]: http://www.apache.org/licenses/LICENSE-2.0
-[Cloud Foundry]: http://www.cloudfoundry.com
+[Cloud Foundry]: http://www.cloudfoundry.org
 [contributor guidelines]: CONTRIBUTING.md
 [disables `remote_downloads`]: docs/extending-caches.md#configuration
 [Environment Variables]: http://docs.cloudfoundry.org/devguide/deploy-apps/manifest.html#env-block

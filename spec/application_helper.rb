@@ -1,6 +1,5 @@
-# Encoding: utf-8
 # Cloud Foundry Java Buildpack
-# Copyright 2013-2016 the original author or authors.
+# Copyright 2013-2017 the original author or authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,7 +17,6 @@ require 'spec_helper'
 require 'java_buildpack/component/application'
 require 'java_buildpack/component/services'
 require 'json'
-require 'securerandom'
 
 shared_context 'application_helper' do
 
@@ -47,9 +45,10 @@ shared_context 'application_helper' do
 
   let(:services) { application.services }
 
-  let(:vcap_application) { { 'application_name' => 'test-application-name' ,
-                             'instance_id' => SecureRandom.uuid,
-                             'instance_index' => Random.rand(100) } }
+  let(:vcap_application) do
+    { 'application_name'    => 'test-application-name',
+      'application_version' => 'test-application-version' }
+  end
 
   let(:vcap_services) do
     { 'test-service-n/a' => [{ 'name'        => 'test-service-name', 'label' => 'test-service-n/a',

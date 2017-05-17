@@ -1,6 +1,5 @@
-# Encoding: utf-8
 # Cloud Foundry Java Buildpack
-# Copyright 2013-2016 the original author or authors.
+# Copyright 2013-2017 the original author or authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -124,62 +123,6 @@ describe JavaBuildpack::Framework::JavaOpts do
     it 'escapes equal signs after the first one' do
       component.release
       expect(java_opts).to include('-javaagent:agent.jar=port\\=$PORT,host\\=localhost')
-    end
-  end
-
-  context do
-    let(:configuration) { { 'java_opts' => '-Xms1024M' } }
-
-    it 'raises an error if a -Xms is configured' do
-      expect { component.compile }.to raise_error(/-Xms/)
-    end
-  end
-
-  context do
-    let(:configuration) { { 'java_opts' => '-Xmx1024M' } }
-
-    it 'raises an error if a -Xmx is configured' do
-      expect { component.compile }.to raise_error(/-Xmx/)
-    end
-  end
-
-  context do
-    let(:configuration) { { 'java_opts' => '-XX:MaxMetaspaceSize=128M' } }
-
-    it 'raises an error if a -XX:MaxMetaspaceSize is configured' do
-      expect { component.compile }.to raise_error(/-XX:MaxMetaspaceSize/)
-    end
-  end
-
-  context do
-    let(:configuration) { { 'java_opts' => '-XX:MetaspaceSize=128M' } }
-
-    it 'raises an error if a -XX:MetaspaceSize is configured' do
-      expect { component.compile }.to raise_error(/-XX:MetaspaceSize/)
-    end
-  end
-
-  context do
-    let(:configuration) { { 'java_opts' => '-XX:MaxPermSize=128M' } }
-
-    it 'raises an error if a -XX:MaxPermSize is configured' do
-      expect { component.compile }.to raise_error(/-XX:MaxPermSize/)
-    end
-  end
-
-  context do
-    let(:configuration) { { 'java_opts' => '-XX:PermSize=128M' } }
-
-    it 'raises an error if a -XX:PermSize is configured' do
-      expect { component.compile }.to raise_error(/-XX:PermSize/)
-    end
-  end
-
-  context do
-    let(:configuration) { { 'java_opts' => '-Xss1M' } }
-
-    it 'raises an error if a -Xss is configured' do
-      expect { component.compile }.to raise_error(/-Xss/)
     end
   end
 

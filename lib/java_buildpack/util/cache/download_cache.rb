@@ -1,6 +1,5 @@
-# Encoding: utf-8
 # Cloud Foundry Java Buildpack
-# Copyright 2013-2016 the original author or authors.
+# Copyright 2013-2017 the original author or authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -72,7 +71,7 @@ module JavaBuildpack
             downloaded  = false
           end
 
-          fail "Unable to find cached file for #{uri.sanitize_uri}" unless cached_file
+          raise "Unable to find cached file for #{uri.sanitize_uri}" unless cached_file
           cached_file.cached(File::RDONLY | File::BINARY, downloaded, &block)
         end
 
@@ -88,7 +87,7 @@ module JavaBuildpack
 
         CA_FILE = (Pathname.new(__FILE__).dirname + '../../../../resources/ca_certs.pem').freeze
 
-        FAILURE_LIMIT = 5.freeze
+        FAILURE_LIMIT = 5
 
         HTTP_ERRORS = [
           EOFError,
@@ -138,7 +137,7 @@ module JavaBuildpack
             elsif redirect?(response)
               downloaded = update URI(response['Location']), cached_file
             else
-              fail InferredNetworkFailure, "#{response.code} #{response.message}\n#{response.body}"
+              raise InferredNetworkFailure, "#{response.code} #{response.message}\n#{response.body}"
             end
           end
 
@@ -197,20 +196,25 @@ module JavaBuildpack
           client_authentication = JavaBuildpack::Util::ConfigurationUtils.load('cache')['client_authentication']
 
           certificate_location = client_authentication['certificate_location']
-          File.open(certificate_location) do |f|
-            http_options[:cert] = OpenSSL::X509::Certificate.new f.read
-            @logger.debug { "Adding client certificate from #{certificate_location}" }
-          end if certificate_location
+          if certificate_location
+            File.open(certificate_location) do |f|
+              http_options[:cert] = OpenSSL::X509::Certificate.new f.read
+              @logger.debug { "Adding client certificate from #{certificate_location}" }
+            end
+          end
 
           private_key_location = client_authentication['private_key_location']
+
+          return unless private_key_location
+
           File.open(private_key_location) do |f|
             http_options[:key] = OpenSSL::PKey.read f.read, client_authentication['private_key_password']
             @logger.debug { "Adding private key from #{private_key_location}" }
-          end if private_key_location
+          end
         end
 
         def compressed?(response)
-          %w(br compress deflate gzip x-gzip).include?(response['Content-Encoding'])
+          %w[br compress deflate gzip x-gzip].include?(response['Content-Encoding'])
         end
 
         def debug_ssl(http)
@@ -325,13 +329,13 @@ module JavaBuildpack
         def validate_size(expected_size, cached_file)
           return unless expected_size
 
-          actual_size = cached_file.cached(File::RDONLY) { |f| f.size }
+          actual_size = cached_file.cached(File::RDONLY, &:size)
           @logger.debug { "Validated content size #{actual_size} is #{expected_size}" }
 
-          return if (expected_size.to_i == actual_size)
+          return if expected_size.to_i == actual_size
 
           cached_file.destroy
-          fail InferredNetworkFailure, "Content has invalid size.  Was #{actual_size}, should be #{expected_size}."
+          raise InferredNetworkFailure, "Content has invalid size.  Was #{actual_size}, should be #{expected_size}."
         end
 
       end

@@ -1,6 +1,5 @@
-# Encoding: utf-8
 # Cloud Foundry Java Buildpack
-# Copyright 2013-2016 the original author or authors.
+# Copyright 2013-2017 the original author or authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -31,8 +30,8 @@ module JavaBuildpack
 
       # (see JavaBuildpack::Component::BaseComponent#release)
       def release
-        credentials = @application.services.find_service(FILTER)['credentials']
-        java_opts   = @droplet.java_opts
+        credentials   = @application.services.find_service(FILTER)['credentials']
+        java_opts     = @droplet.java_opts
         configuration = {}
 
         apply_configuration(credentials, configuration)
@@ -53,7 +52,7 @@ module JavaBuildpack
 
       private
 
-      FILTER = /newrelic/.freeze
+      FILTER = /newrelic/
 
       LICENSE_KEY = 'licenseKey'.freeze
 
@@ -62,9 +61,9 @@ module JavaBuildpack
       private_constant :FILTER, :LICENSE_KEY, :LICENSE_KEY_USER
 
       def apply_configuration(credentials, configuration)
-        configuration['log_file_name'] = 'STDOUT'
+        configuration['log_file_name']  = 'STDOUT'
         configuration[LICENSE_KEY_USER] = credentials[LICENSE_KEY]
-        configuration['app_name'] = @application.details['application_name']
+        configuration['app_name']       = @application.details['application_name']
       end
 
       def apply_user_configuration(credentials, configuration)

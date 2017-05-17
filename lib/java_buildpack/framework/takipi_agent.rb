@@ -31,7 +31,7 @@ module JavaBuildpack
       def compile
         uri = @configuration['uri']
         version = @configuration['version']
-        download_tar
+        download_tar(version, uri, @droplet.sandbox, 'Takipi Agent')
         @droplet.copy_resources
       end
 

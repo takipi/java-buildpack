@@ -23,7 +23,7 @@ require 'java_buildpack/util/qualify_path'
 module JavaBuildpack
   module Framework
 
-    # Encapsulates the functionality for enabling zero-touch AppDynamics support.
+    # Encapsulates the functionality for enabling zero-touch OverOps (fka Takipi) support.
     class TakipiAgent < JavaBuildpack::Component::BaseComponent
       include JavaBuildpack::Util
 

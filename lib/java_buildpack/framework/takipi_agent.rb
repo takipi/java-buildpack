@@ -24,7 +24,7 @@ module JavaBuildpack
   module Framework
 
     # Encapsulates the functionality for enabling zero-touch OverOps (fka Takipi) support.
-    class TakipiAgent < JavaBuildpack::Component::BaseComponent
+    class TakipiAgent < JavaBuildpack::Component::VersionedDependencyComponent
       include JavaBuildpack::Util
 
       # (see JavaBuildpack::Component::BaseComponent#compile)

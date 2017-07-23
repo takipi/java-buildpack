@@ -47,7 +47,8 @@ module JavaBuildpack
 
       # (see JavaBuildpack::Component::VersionedDependencyComponent#supports?)
       def supports?
-        @application.services.one_service? FILTER, 'secret_key'
+        true
+        #@application.services.one_service? FILTER, 'secret_key'
       end
       # 
       # def detect

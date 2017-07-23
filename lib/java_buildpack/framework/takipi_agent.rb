@@ -76,9 +76,9 @@ module JavaBuildpack
         env.add_environment_variable('TAKIPI_HOME', sandbox)
         env.add_environment_variable('TAKIPI_MACHINE_NAME', node_name)
         
-        env.add_environment_variable('TAKIPI_SECRET_KEY', "'#{@configuration['secret_key']}'")
-        env.add_environment_variable('TAKIPI_MASTER_HOST', "'#{@configuration['collector_host']}'")
-        env.add_environment_variable('TAKIPI_MASTER_PORT', "'#{@configuration['collector_port']}'")
+        @configuration['secret_key'] && env.add_environment_variable('TAKIPI_SECRET_KEY', "#{@configuration['secret_key']}")
+        env.add_environment_variable('TAKIPI_MASTER_HOST', "#{@configuration['collector_host']}")
+        env.add_environment_variable('TAKIPI_MASTER_PORT', "#{@configuration['collector_port']}")
       end
 
       def application_name(java_opts)

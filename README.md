@@ -26,7 +26,7 @@ The buildpack supports extension through the use of Git repository forking. The 
 Buildpack configuration can be overridden with an environment variable matching the configuration file you wish to override minus the `.yml` extension and with a prefix of `JBP_CONFIG`. It is not possible to add new configuration properties and properties with `nil` or empty values will be ignored by the buildpack. The value of the variable should be valid inline yaml, referred to as `flow style` in the yaml spec ([Wikipedia] has a good description of this yaml syntax). For example, to change the default version of Java to 7 and adjust the memory heuristics apply this environment variable to the application.
 
 ```bash
-$ cf set-env my-application JBP_CONFIG_OPEN_JDK_JRE '{ jre: { version: 1.8.0_+ }, memory_calculator: { stack_threads: 200 } }'
+$ cf set-env my-application JBP_CONFIG_OPEN_JDK_JRE '{ jre: { version: 1.7.0_+ }, memory_calculator: { stack_threads: 200 } }'
 ```
 
 If the key or value contains a special character such as `:` it should be escaped with double quotes. For example, to change the default repository path for the buildpack.
@@ -82,6 +82,7 @@ To learn how to configure various properties of the buildpack, follow the "Confi
 	* [Dynatrace SaaS/Managed OneAgent](docs/framework-dynatrace_one_agent.md) ([Configuration](docs/framework-dynatrace_one_agent.md#configuration))
 	* [Google Stackdriver Debugger](docs/framework-google_stackdriver_debugger.md) ([Configuration](docs/framework-google_stackdriver_debugger.md#configuration))
 	* [Introscope Agent](docs/framework-introscope_agent.md) ([Configuration](docs/framework-introscope_agent.md#configuration))
+	* [Java Memory Assistant](docs/framework-java_memory_assistant.md) ([Configuration](docs/framework-java_memory_assistant.md#configuration))
 	* [Java Options](docs/framework-java_opts.md) ([Configuration](docs/framework-java_opts.md#configuration))
 	* [JRebel Agent](docs/framework-jrebel_agent.md) ([Configuration](docs/framework-jrebel_agent.md#configuration))
 	* [JMX](docs/framework-jmx.md) ([Configuration](docs/framework-jmx.md#configuration))

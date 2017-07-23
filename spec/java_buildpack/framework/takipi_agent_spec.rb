@@ -1,6 +1,5 @@
-# Encoding: utf-8
 # Cloud Foundry Java Buildpack
-# Copyright 2013-2016 the original author or authors.
+# Copyright 2013-2017 the original author or authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -26,7 +25,9 @@ describe JavaBuildpack::Framework::TakipiAgent do
     let(:configuration) do
       {
         'uri' => 'test-uri',
-        'secret_key' => 'test-secret'
+        'secret_key' => 'test-secret',
+        'collector_host' => 'test-host',
+        'collector_port' => 'test-port'
       }
     end
 
@@ -39,11 +40,11 @@ describe JavaBuildpack::Framework::TakipiAgent do
     end
 
     it 'preserves find_single_directory results',
-        cache_fixture: 'stub-takipi-agent.tar.gz',
-        app_fixture: 'container_play_2.1_dist' do
+       cache_fixture: 'stub-takipi-agent.tar.gz',
+       app_fixture: 'container_play_2.1_dist' do
       component.compile
       component.send(:extend, JavaBuildpack::Util)
-      expect(component.send(:find_single_directory)).to_not be_nil
+      expect(component.send(:find_single_directory)).not_to be_nil
     end
 
     it 'updates JAVA_OPTS' do
@@ -52,20 +53,27 @@ describe JavaBuildpack::Framework::TakipiAgent do
       expect(java_opts).to include('-Dtakipi.name=test-application-name')
     end
 
-    it 'updates environment varilables' do
+    it 'updates default environment variables' do
       component.release
 
-      expect(environment_variables).to include("TAKIPI_SECRET_KEY='test-secret'")
-      expect(environment_variables).to include("LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PWD/.java-buildpack/takipi_agent/lib")
-      expect(environment_variables).to include("JVM_LIB_FILE=$PWD/.test-java-home/lib/amd64/server/libjvm.so")
-      expect(environment_variables).to include("TAKIPI_HOME=$PWD/.java-buildpack/takipi_agent")
+      expect(environment_variables).to include('LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PWD/.java-buildpack/takipi_agent/lib')
+      expect(environment_variables).to include('JVM_LIB_FILE=$PWD/.test-java-home/lib/amd64/server/libjvm.so')
+      expect(environment_variables).to include('TAKIPI_HOME=$PWD/.java-buildpack/takipi_agent')
+    end
+
+    it 'updates user environment variables' do
+      component.release
+
+      expect(environment_variables).to include('TAKIPI_SECRET_KEY=test-secret')
+      expect(environment_variables).to include('TAKIPI_MASTER_HOST=test-host')
+      expect(environment_variables).to include('TAKIPI_MASTER_PORT=test-port')
     end
 
     context 'configuration overrides' do
 
       let(:configuration) do
-        { 'node_name_prefix' => "test-name",
-          'application_name' => "test-name" }
+        { 'node_name_prefix' => 'test-name',
+          'application_name' => 'test-name' }
       end
 
       it 'updates JAVA_OPTS' do

@@ -71,14 +71,14 @@ module JavaBuildpack
         env = @droplet.environment_variables
         sandbox = @droplet.sandbox
         
-        env.add_environment_variable('LD_LIBRARY_PATH', "$LD_LIBRARY_PATH:#{qualify_path(sandbox + 'lib', @droplet.root)}")
+      #  env.add_environment_variable('LD_LIBRARY_PATH', "$LD_LIBRARY_PATH:#{qualify_path(sandbox + 'lib', @droplet.root)}")
         env.add_environment_variable('JVM_LIB_FILE', jvm_lib_file)
         env.add_environment_variable('TAKIPI_HOME', sandbox)
         env.add_environment_variable('TAKIPI_MACHINE_NAME', node_name)
         
         @configuration['secret_key'] && env.add_environment_variable('TAKIPI_SECRET_KEY', "#{@configuration['secret_key']}")
-        env.add_environment_variable('TAKIPI_MASTER_HOST', "#{@configuration['collector_host']}")
-        env.add_environment_variable('TAKIPI_MASTER_PORT', "#{@configuration['collector_port']}")
+        @configuration['collector_host'] && env.add_environment_variable('TAKIPI_MASTER_HOST', "#{@configuration['collector_host']}")
+        @configuration['collector_port'] && env.add_environment_variable('TAKIPI_MASTER_PORT', "#{@configuration['collector_port']}")
       end
 
       def application_name(java_opts)

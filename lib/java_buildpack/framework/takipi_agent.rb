@@ -42,10 +42,10 @@ module JavaBuildpack
         application_name java_opts
         set_environment_variables
       end
-
-      def detect
-        @configuration['secret_key'] != 'REPLACE_ME' ? "takipi-agent=#{@configuration['version']}" : nil
-      end
+      # 
+      # def detect
+      #   @configuration['secret_key'] != 'REPLACE_ME' ? "takipi-agent=#{@configuration['version']}" : nil
+      # end
 
       private
       def jvm_lib_file
@@ -61,9 +61,9 @@ module JavaBuildpack
         env.add_environment_variable('TAKIPI_HOME', sandbox)
         env.add_environment_variable('TAKIPI_MACHINE_NAME', node_name)
         
-        @configuration['secret_key'] && env.add_environment_variable('TAKIPI_SECRET_KEY', "'#{@configuration['secret_key']}'")
-        @configuration['collector_host'] && env.add_environment_variable('TAKIPI_MASTER_HOST', "#{@configuration['collector_host']}")
-        @configuration['collector_port'] && env.add_environment_variable('TAKIPI_MASTER_PORT', "#{@configuration['collector_port']}")
+        env.add_environment_variable('TAKIPI_SECRET_KEY', "'#{@configuration['secret_key']}'")
+        env.add_environment_variable('TAKIPI_MASTER_HOST', "'#{@configuration['collector_host']}'")
+        env.add_environment_variable('TAKIPI_MASTER_PORT', "'#{@configuration['collector_port']}'")
       end
 
       def application_name(java_opts)

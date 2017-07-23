@@ -38,11 +38,12 @@ module JavaBuildpack
       # (see JavaBuildpack::Component::BaseComponent#release)
       def release
         java_opts   = @droplet.java_opts
-        java_opts.add_agentlib('TakipiAgent')
+        #java_opts.add_agentlib('TakipiAgent')
+        java_opts.add_agentpath('.java-buildpack/takipi_agent/takipi/lib/libTakipiAgent.so')
         application_name java_opts
         set_environment_variables
       end
-      
+
       protected
 
       # (see JavaBuildpack::Component::VersionedDependencyComponent#supports?)

@@ -18,6 +18,8 @@
 version: 2.0.256
 repository_root: "{default.repository.root}/takipi"
 uri: 'https://app.takipi.com/app/download?t=t4c-tgz'
-secret_key: REPLACE_ME
+# secret_key: REPLACE_ME
+# collector_host:
+# collector_port:
 # application_name:
 node_name_prefix:

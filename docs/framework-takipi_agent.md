@@ -1,5 +1,5 @@
 # Takipi Agent Framework
-The Takipi Agent Framework causes an application to be automatically configured to work with Takipi SaaS.
+The Takipi Agent Framework causes an application to be automatically configured to work with OverOps (www.overops.com).
 
 ## Configuration
 For general information on configuring the buildpack, including how to specify configuration values through environment variables, refer to [Configuration and Extension][].

@@ -42,6 +42,13 @@ module JavaBuildpack
         application_name java_opts
         set_environment_variables
       end
+      
+      protected
+
+      # (see JavaBuildpack::Component::VersionedDependencyComponent#supports?)
+      def supports?
+        @application.services.one_service? FILTER, 'host-name'
+      end
       # 
       # def detect
       #   @configuration['secret_key'] != 'REPLACE_ME' ? "takipi-agent=#{@configuration['version']}" : nil

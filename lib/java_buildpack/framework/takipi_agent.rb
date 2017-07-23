@@ -47,7 +47,7 @@ module JavaBuildpack
 
       # (see JavaBuildpack::Component::VersionedDependencyComponent#supports?)
       def supports?
-        @application.services.one_service? FILTER, 'secret_key' || @configuration['secret_key']
+        @configuration['secret_key'] || @application.services.one_service? FILTER, 'secret_key'
       end
       
       private

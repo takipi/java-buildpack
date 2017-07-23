@@ -17,7 +17,6 @@
 ---
 version: 4.+
 repository_root: http://get.takipi.com
-uri: 'https://app.takipi.com/app/download?t=t4c-tgz'
 # secret_key: REPLACE_ME
 # collector_host:
 # collector_port:

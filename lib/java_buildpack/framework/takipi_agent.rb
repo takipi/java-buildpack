@@ -39,7 +39,7 @@ module JavaBuildpack
       def release
         java_opts   = @droplet.java_opts
         #java_opts.add_agentlib('TakipiAgent')
-        java_opts.add_agentpath(@droplet.sandbox + 'takipi/lib/libTakipiAgent.so', 'takipi.debug.logconsole')
+        java_opts.add_agentpath_with_props(@droplet.sandbox + 'takipi/lib/libTakipiAgent.so', 'takipi.debug.logconsole')
         application_name java_opts
         set_environment_variables
       end

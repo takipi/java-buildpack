@@ -15,8 +15,8 @@
 
 # Configuration for the Takipi framework
 ---
-version: 2.0.256
-repository_root: "{default.repository.root}/takipi"
+version: ta
+repository_root: http://get.takipi.com
 uri: 'https://app.takipi.com/app/download?t=t4c-tgz'
 # secret_key: REPLACE_ME
 # collector_host:

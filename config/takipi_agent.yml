@@ -17,8 +17,8 @@
 ---
 version: 4.+
 repository_root: http://get.takipi.com
-# secret_key: REPLACE_ME
-# collector_host:
-# collector_port:
+secret_key: 
+collector_host:
+collector_port:
 # application_name:
 node_name_prefix:

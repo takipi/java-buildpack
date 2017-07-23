@@ -47,7 +47,7 @@ module JavaBuildpack
 
       # (see JavaBuildpack::Component::VersionedDependencyComponent#supports?)
       def supports?
-        @application.services.one_service? FILTER, 'host-name'
+        @application.services.one_service? FILTER, 'secret_key'
       end
       # 
       # def detect
@@ -55,6 +55,13 @@ module JavaBuildpack
       # end
 
       private
+      
+      FILTER = /takipi/
+
+      SECRET_KEY = 'secret_key'.freeze
+
+      private_constant :FILTER, :SECRET_KEY
+      
       def jvm_lib_file
         @droplet.java_home.root + 'lib/amd64/server/libjvm.so'
       end

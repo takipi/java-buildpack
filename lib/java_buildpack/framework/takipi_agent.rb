@@ -29,9 +29,9 @@ module JavaBuildpack
 
       # (see JavaBuildpack::Component::BaseComponent#compile)
       def compile
-        uri = @configuration['uri']
-        version = @configuration['version']
-        download_tar(version, uri)
+        #uri = @configuration['uri']
+        #version = @configuration['version']
+        download_tar
         @droplet.copy_resources
       end
 

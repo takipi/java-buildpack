@@ -1,6 +1,6 @@
-# Encoding: utf-8
 # Cloud Foundry Java Buildpack
-# Copyright 2013-2016 the original author or authors.
+#
+# Copyright 2013-2017 the original author or authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ require 'java_buildpack/component/versioned_dependency_component'
 require 'java_buildpack/framework'
 require 'java_buildpack/util/qualify_path'
 
-
 module JavaBuildpack
   module Framework
 
@@ -29,18 +28,17 @@ module JavaBuildpack
 
       # (see JavaBuildpack::Component::BaseComponent#compile)
       def compile
-        #uri = @configuration['uri']
-        #version = @configuration['version']
         download_tar
         @droplet.copy_resources
       end
 
       # (see JavaBuildpack::Component::BaseComponent#release)
       def release
-        java_opts   = @droplet.java_opts
+        java_opts = @droplet.java_opts
         java_opts.add_agentlib('TakipiAgent')
         application_name java_opts
-        set_environment_variables
+        set_default_env_vars
+        set_config_env_vars
       end
 
       protected
@@ -49,31 +47,35 @@ module JavaBuildpack
       def supports?
         @configuration['secret_key'] || @configuration['collector_host']
       end
-      
+
       private
-      
-      FILTER = /takipi/
 
-      SECRET_KEY = 'secret_key'.freeze
-
-      private_constant :FILTER, :SECRET_KEY
-      
       def jvm_lib_file
         @droplet.java_home.root + 'lib/amd64/server/libjvm.so'
       end
 
-      def set_environment_variables
+      def set_default_env_vars
         env = @droplet.environment_variables
         sandbox = @droplet.sandbox
-        
-        env.add_environment_variable('LD_LIBRARY_PATH', "$LD_LIBRARY_PATH:#{qualify_path(sandbox + 'lib', @droplet.root)}")
+
+        env.add_environment_variable(
+          'LD_LIBRARY_PATH',
+          "$LD_LIBRARY_PATH:#{qualify_path(sandbox + 'lib', @droplet.root)}"
+        )
         env.add_environment_variable('JVM_LIB_FILE', jvm_lib_file)
         env.add_environment_variable('TAKIPI_HOME', sandbox)
         env.add_environment_variable('TAKIPI_MACHINE_NAME', node_name)
-        
-        @configuration['secret_key'] && env.add_environment_variable('TAKIPI_SECRET_KEY', "#{@configuration['secret_key']}")
-        @configuration['collector_host'] && env.add_environment_variable('TAKIPI_MASTER_HOST', "#{@configuration['collector_host']}")
-        @configuration['collector_port'] && env.add_environment_variable('TAKIPI_MASTER_PORT', "#{@configuration['collector_port']}")
+      end
+
+      def set_config_env_vars
+        env = @droplet.environment_variables
+
+        @configuration['secret_key'] &&
+          env.add_environment_variable('TAKIPI_SECRET_KEY', @configuration['secret_key'].to_s)
+        @configuration['collector_host'] &&
+          env.add_environment_variable('TAKIPI_MASTER_HOST', @configuration['collector_host'].to_s)
+        @configuration['collector_port'] &&
+          env.add_environment_variable('TAKIPI_MASTER_PORT', @configuration['collector_port'].to_s)
       end
 
       def application_name(java_opts)
@@ -88,7 +90,7 @@ module JavaBuildpack
           %q|$(ruby -rjson -e "puts JSON.parse(ENV['VCAP_APPLICATION'])['instance_id']")|
         end
       end
-    
+
     end
 
   end

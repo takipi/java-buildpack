@@ -38,8 +38,7 @@ module JavaBuildpack
       # (see JavaBuildpack::Component::BaseComponent#release)
       def release
         java_opts   = @droplet.java_opts
-        #java_opts.add_agentlib('TakipiAgent')
-        java_opts.add_agentpath(@droplet.sandbox + 'lib/libTakipiAgent.so=takipi.debug.logconsole')
+        java_opts.add_agentlib('TakipiAgent')
         application_name java_opts
         set_environment_variables
       end
@@ -48,14 +47,9 @@ module JavaBuildpack
 
       # (see JavaBuildpack::Component::VersionedDependencyComponent#supports?)
       def supports?
-        true
-        #@application.services.one_service? FILTER, 'secret_key'
+        @application.services.one_service? FILTER, 'secret_key' || @configuration['secret_key']
       end
-      # 
-      # def detect
-      #   @configuration['secret_key'] != 'REPLACE_ME' ? "takipi-agent=#{@configuration['version']}" : nil
-      # end
-
+      
       private
       
       FILTER = /takipi/
@@ -72,7 +66,7 @@ module JavaBuildpack
         env = @droplet.environment_variables
         sandbox = @droplet.sandbox
         
-      #  env.add_environment_variable('LD_LIBRARY_PATH', "$LD_LIBRARY_PATH:#{qualify_path(sandbox + 'lib', @droplet.root)}")
+        env.add_environment_variable('LD_LIBRARY_PATH', "$LD_LIBRARY_PATH:#{qualify_path(sandbox + 'lib', @droplet.root)}")
         env.add_environment_variable('JVM_LIB_FILE', jvm_lib_file)
         env.add_environment_variable('TAKIPI_HOME', sandbox)
         env.add_environment_variable('TAKIPI_MACHINE_NAME', node_name)

@@ -37,7 +37,6 @@ jres:
 # Frameworks are processed in order. Any Java Opts added by the JavaOpts framework will be specified in the start
 # command after any Java Opts added by previous frameworks.
 frameworks:
-  - "JavaBuildpack::Framework::TakipiAgent"
   - "JavaBuildpack::Framework::AppDynamicsAgent"
   - "JavaBuildpack::Framework::ClientCertificateMapper"
   - "JavaBuildpack::Framework::ContainerCustomizer"
@@ -63,5 +62,6 @@ frameworks:
   - "JavaBuildpack::Framework::SpringAutoReconfiguration"
   - "JavaBuildpack::Framework::SpringInsight"
   - "JavaBuildpack::Framework::YourKitProfiler"
+  - "JavaBuildpack::Framework::TakipiAgent"
   - "JavaBuildpack::Framework::SecurityProviders"
   - "JavaBuildpack::Framework::JavaOpts"

@@ -41,23 +41,6 @@ module JavaBuildpack
         add_preformatted_options "-javaagent:#{qualify_path path}"
       end
 
-      # Adds a +agentlib+ entry to the +JAVA_OPTS+.
-      #
-      # @param [Strings] The name of the +agentlib+ shared library
-      # @param [Properties] props to append to the agentlib entry
-      # @return [JavaOpts]     +self+ for chaining
-      def add_agentlib_with_props(lib_name, props)
-        add_preformatted_options "-agentlib:#{lib_name}=" + props.map { |k, v| "#{k}=#{v}" }.join(',')
-      end
-
-      # Adds a +agentlib+ entry to the +JAVA_OPTS+.
-      #
-      # @param [String] The name of the +agentlib+ shared library
-      # @return [JavaOpts]     +self+ for chaining
-      def add_agentlib(lib_name)
-        add_preformatted_options "-agentlib:#{lib_name}"
-      end
-
       # Adds a +agentpath+ entry to the +JAVA_OPTS+.  Prepends +$PWD+ to the path (relative to the droplet root) to
       # ensure that the path is always accurate.
       #

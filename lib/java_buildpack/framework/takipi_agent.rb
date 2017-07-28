@@ -46,7 +46,7 @@ module JavaBuildpack
 
       # (see JavaBuildpack::Component::VersionedDependencyComponent#supports?)
       def supports?
-        @application.services.one_service? FILTER, 'secret_key'
+        @application.services.one_service? FILTER, 'secret_key', 'collector_host'
       end
       
       private
@@ -78,10 +78,11 @@ module JavaBuildpack
         secret_key = credentials['secret_key']
         env.add_environment_variable 'TAKIPI_SECRET_KEY', secret_key if secret_key 
         
-        @configuration['collector_host'] &&
-          env.add_environment_variable('TAKIPI_MASTER_HOST', @configuration['collector_host'].to_s)
-        @configuration['collector_port'] &&
-          env.add_environment_variable('TAKIPI_MASTER_PORT', @configuration['collector_port'].to_s)
+        collector_host = credentials['collector_host']
+        env.add_environment_variable 'TAKIPI_MASTER_HOST', collector_host if collector_host 
+        
+        collector_port = credentials['collector_port']
+        env.add_environment_variable 'TAKIPI_MASTER_PORT', collector_port if collector_port 
       end
 
       def application_name(java_opts)

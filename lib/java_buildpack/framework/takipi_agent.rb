@@ -36,9 +36,10 @@ module JavaBuildpack
       def release
         java_opts = @droplet.java_opts
         java_opts.add_agentpath(@droplet.sandbox + 'lib/libTakipiAgent.so')
+        credentials = @application.services.find_service(FILTER)['credentials']
         application_name java_opts
         default_env_vars
-        config_env_vars
+        config_env_vars credentials
       end
 
       protected
@@ -71,11 +72,11 @@ module JavaBuildpack
         env.add_environment_variable('TAKIPI_MACHINE_NAME', node_name)
       end
 
-      def config_env_vars
+      def config_env_vars(credentials)
         env = @droplet.environment_variables
-
-        @configuration['secret_key'] &&
-          env.add_environment_variable('TAKIPI_SECRET_KEY', @configuration['secret_key'].to_s)
+        
+        credentials['secret_key'] &&
+          env.add_environment_variable('TAKIPI_SECRET_KEY', credentials['secret_key'])
         @configuration['collector_host'] &&
           env.add_environment_variable('TAKIPI_MASTER_HOST', @configuration['collector_host'].to_s)
         @configuration['collector_port'] &&

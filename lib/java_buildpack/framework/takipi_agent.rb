@@ -95,11 +95,7 @@ module JavaBuildpack
       end
 
       def node_name
-        if @configuration['node_name_prefix'] && !@configuration['node_name_prefix'].empty?
-          "#{@configuration['node_name_prefix']}-$CF_INSTANCE_INDEX"
-        else
-          %q|$(ruby -rjson -e "puts JSON.parse(ENV['VCAP_APPLICATION'])['instance_id']")|
-        end
+        "#{@configuration['node_name_prefix']}-$CF_INSTANCE_INDEX"
       end
 
     end

@@ -45,10 +45,14 @@ module JavaBuildpack
 
       # (see JavaBuildpack::Component::VersionedDependencyComponent#supports?)
       def supports?
-        @configuration['secret_key'] || @configuration['collector_host']
+        @application.services.one_service? FILTER, 'secret_key'
       end
-
+      
       private
+      
+      FILTER = /takipi/
+
+      private_constant :FILTER
 
       def jvm_lib_file
         @droplet.java_home.root + 'lib/amd64/server/libjvm.so'

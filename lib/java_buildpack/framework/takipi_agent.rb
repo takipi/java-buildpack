@@ -36,9 +36,9 @@ module JavaBuildpack
       def release
         java_opts = @droplet.java_opts
         java_opts.add_agentpath(@droplet.sandbox + 'lib/libTakipiAgent.so')
-        credentials = @application.services.find_service(FILTER)['credentials']
         application_name java_opts
         default_env_vars
+        credentials = @application.services.find_service(FILTER)['credentials']
         config_env_vars credentials
       end
 
@@ -46,12 +46,16 @@ module JavaBuildpack
 
       # (see JavaBuildpack::Component::VersionedDependencyComponent#supports?)
       def supports?
-        @application.services.one_service? FILTER, 'secret_key', 'collector_host'
+        @application.services.one_service? FILTER, [SECRET_KEY, COLLECTOR_HOST]
       end
       
       private
       
       FILTER = /takipi/
+      
+      SECRET_KEY = 'secret_key'.freeze
+
+      COLLECTOR_HOST = 'collector_host'.freeze
 
       private_constant :FILTER
 

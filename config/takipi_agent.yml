@@ -17,5 +17,5 @@
 ---
 version: 4.+
 repository_root: http://get.takipi.com
-node_name_prefix: Node
+node_name_prefix: node
 application_name:

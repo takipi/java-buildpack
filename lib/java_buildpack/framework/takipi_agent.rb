@@ -75,8 +75,9 @@ module JavaBuildpack
       def config_env_vars(credentials)
         env = @droplet.environment_variables
         
-        credentials['secret_key'] &&
-          env.add_environment_variable('TAKIPI_SECRET_KEY', credentials['secret_key'])
+        secret_key = credentials['secret_key']
+        env.add_environment_variable 'TAKIPI_SECRET_KEY', secret_key, if secret_key 
+        
         @configuration['collector_host'] &&
           env.add_environment_variable('TAKIPI_MASTER_HOST', @configuration['collector_host'].to_s)
         @configuration['collector_port'] &&

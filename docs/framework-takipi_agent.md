@@ -1,6 +1,33 @@
 # Takipi Agent Framework
 The Takipi Agent Framework causes an application to be automatically configured to work with [OverOps Service][].
 
+<table>
+  <tr>
+    <td><strong>Detection Criterion</strong></td><td>Existence of a single bound Takipi service.
+      <ul>
+        <li>Existence of a Takipi service is defined as the <a href="http://docs.cloudfoundry.org/devguide/deploy-apps/environment-variable.html#VCAP-SERVICES"><code>VCAP_SERVICES</code></a> payload containing a service who's name, label or tag has <code>takipi</code> as a substring.</li>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td><strong>Tags</strong></td>
+    <td><tt>takipi-agent=&lt;version&gt;</tt></td>
+  </tr>
+</table>
+Tags are printed to standard output by the buildpack detect script
+
+## User-Provided Service
+When binding Takipi using a user-provided service, it must have name or tag with `takipi` in it.
+The credential payload can contain the following entries. 
+
+| Name | Description
+| ---- | -----------
+| `secret_key` | (Optional) The agent installation key
+| `collector_host` | (Optional) The remote collector hostname or IP 
+| `collector_port` | (Optional) the remote collector port
+
+Either the `secret_key` or `collector_host` should be configured. More information about remote collectors can be found in [OverOps Remote Collector][]
+
 ## Configuration
 For general information on configuring the buildpack, including how to specify configuration values through environment variables, refer to [Configuration and Extension][].
 
@@ -8,12 +35,8 @@ The framework can be configured by modifying the [`config/takipi_agent.yml`][] f
 
 | Name | Description
 | ---- | -----------
-| `node_name_prefix` | Node name prefix, will be concatenated with `-` and instance index to form the host name in Takipi.
-| `secret_key` | Installation key to use with SaaS (Optional)
-| `collector_host` | Remote collector hostname (or ip) to use (Optional)
-| `collector_port` | Remote collector port to use (Optional)
-
-The Takipi framework will be activated if either `secret_key` or `collector_host` is set (refer to [OverOps Remote Collector][] for more details) - this can be done by changing the value in `config/takipi_agent.yml` or by setting the environment variable `JBP_CONFIG_TAKIPI_AGENT` as explained in the configuration section.
+| `node_name_prefix` | Node name prefix, will be concatenated with `-` and instance index
+| `application_name` | Override the Cloudfoundry default application name
 
 ## Logs
 

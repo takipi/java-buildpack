@@ -3,15 +3,11 @@ The Takipi Agent Framework causes an application to be automatically configured 
 
 <table>
   <tr>
-    <td><strong>Detection Criterion</strong></td><td>Existence of a single bound Takipi service.
-      <ul>
-        <li>Existence of a Takipi service is defined as the <a href="http://docs.cloudfoundry.org/devguide/deploy-apps/environment-variable.html#VCAP-SERVICES"><code>VCAP_SERVICES</code></a> payload containing a service who's name, label or tag has <code>takipi</code> as a substring.</li>
-      </ul>
-    </td>
+    <td><strong>Detection Criterion</strong></td><td>Existence of a single bound Takipi service. The existence of an Takipi service defined by the <a href="http://docs.cloudfoundry.org/devguide/deploy-apps/environment-variable.html#VCAP-SERVICES"><code>VCAP_SERVICES</code></a> payload containing a service name, label or tag with <code>app-dynamics</code> or <code>takipi</code> as a substring.
+</td>
   </tr>
   <tr>
-    <td><strong>Tags</strong></td>
-    <td><tt>takipi-agent=&lt;version&gt;</tt></td>
+    <td><strong>Tags</strong></td><td><tt>takipi-agent=&lt;version&gt;</tt></td>
   </tr>
 </table>
 Tags are printed to standard output by the buildpack detect script

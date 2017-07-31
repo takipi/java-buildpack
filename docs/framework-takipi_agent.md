@@ -22,7 +22,7 @@ The credential payload can contain the following entries.
 | `collector_host` | (Optional) The remote collector hostname or IP 
 | `collector_port` | (Optional) the remote collector port
 
-Either the `secret_key` or `collector_host` should be configured. More information about remote collectors can be found in [OverOps Remote Collector][]
+Setting `secret_key` will run a local collector alongside the agent. Setting `collector_host` will use a remote collector. More information can be found in [OverOps Remote Collector][]
 
 ## Configuration
 For general information on configuring the buildpack, including how to specify configuration values through environment variables, refer to [Configuration and Extension][].
